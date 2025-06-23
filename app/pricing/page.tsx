@@ -8,6 +8,28 @@ import Link from "next/link"
 export default function PricingPage() {
   const plans = [
     {
+      name: "Free",
+      price: "$0",
+      period: "forever",
+      description: "Get started with basic genetic insights",
+      features: [
+        "5 questions per month with Genie",
+        "Basic genetic information",
+        "Educational resources",
+        "Community support",
+      ],
+      limitations: [
+        "No file uploads",
+        "No chat history saving",
+        "No detailed reports",
+        "No family history tools",
+        "No priority support",
+      ],
+      buttonText: "Get Started Free",
+      buttonVariant: "outline" as const,
+      popular: false,
+    },
+    {
       name: "Bring Your Own API",
       price: "$5",
       period: "per month",
@@ -17,16 +39,16 @@ export default function PricingPage() {
         "Use your own OpenAI API key",
         "Pay only OpenAI costs (~$5-15/month)",
         "Full chat history",
+        "File uploads for reports & test results",
         "All genetic resources",
         "Email support",
         "Complete privacy control",
-        "No usage limits",
       ],
       limitations: [],
       buttonText: "Start Free Trial",
       buttonVariant: "default" as const,
       popular: false,
-      isFree: true,
+      highlight: "Most Cost-Effective",
     },
     {
       name: "Pro",
@@ -36,6 +58,7 @@ export default function PricingPage() {
       features: [
         "Unlimited questions with Genie",
         "No API key required",
+        "File uploads for reports & test results",
         "Advanced genetic analysis",
         "Detailed personalized reports",
         "Family history builder",
@@ -57,6 +80,7 @@ export default function PricingPage() {
         "Everything in Pro",
         "Up to 6 family member profiles",
         "Shared family genetic reports",
+        "File uploads for all family members",
         "Inheritance pattern analysis",
         "Family risk assessments",
         "Genetic counselor consultations (2/month)",
@@ -83,28 +107,27 @@ export default function PricingPage() {
             </p>
             <div className="flex items-center justify-center gap-4 mb-8">
               <Badge variant="secondary" className="text-sm">
-                <Star className="h-3 w-3 mr-1" />
-                7-day free trial on all plans
+                <Star className="h-3 w-3 mr-1" />5 free questions to get started
               </Badge>
               <Badge variant="secondary" className="text-sm">
                 <Key className="h-3 w-3 mr-1" />
-                Bring your own API for maximum savings
+                Upload reports with paid plans
               </Badge>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {plans.map((plan, index) => (
               <Card
                 key={index}
-                className={`relative ${plan.popular ? "border-blue-500 shadow-lg scale-105" : ""} ${plan.isFree ? "border-green-500" : ""}`}
+                className={`relative ${plan.popular ? "border-blue-500 shadow-lg scale-105" : ""} ${plan.highlight === "Most Cost-Effective" ? "border-green-500" : ""}`}
               >
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                     <Badge className="bg-blue-500 text-white">Most Popular</Badge>
                   </div>
                 )}
-                {plan.highlight && (
+                {plan.highlight && plan.highlight !== "Most Popular" && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                     <Badge className="bg-green-500 text-white">{plan.highlight}</Badge>
                   </div>
@@ -114,7 +137,7 @@ export default function PricingPage() {
                   <div className="mt-4">
                     <span className="text-3xl font-bold">{plan.price}</span>
                     <span className="text-gray-600 ml-1">/{plan.period}</span>
-                    {plan.isFree && (
+                    {plan.name === "Bring Your Own API" && (
                       <div className="text-sm text-green-600 font-medium mt-1">+ Your OpenAI API costs</div>
                     )}
                   </div>
@@ -143,7 +166,15 @@ export default function PricingPage() {
                     </div>
                   )}
 
-                  <Link href={plan.isFree ? "/api-setup" : `/subscribe?plan=${plan.name.toLowerCase()}`}>
+                  <Link
+                    href={
+                      plan.name === "Free"
+                        ? "/signup"
+                        : plan.name === "Bring Your Own API"
+                          ? "/api-setup"
+                          : `/subscribe?plan=${plan.name.toLowerCase()}`
+                    }
+                  >
                     <Button variant={plan.buttonVariant} className="w-full mt-6">
                       {plan.buttonText}
                     </Button>
@@ -157,31 +188,31 @@ export default function PricingPage() {
             <h2 className="text-2xl font-bold text-center mb-6">Frequently Asked Questions</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h3 className="font-semibold mb-2">Why do you charge $5/month for the API plan?</h3>
+                <h3 className="font-semibold mb-2">Can I upload my genetic test results?</h3>
                 <p className="text-gray-600 text-sm">
-                  The $5 covers our platform costs, infrastructure, security, and ongoing development. You still save
-                  significantly compared to our Pro plan while getting unlimited access.
+                  Yes! With any paid plan, you can upload genetic test results, lab reports, and other documents for
+                  Genie to analyze and provide personalized insights.
                 </p>
               </div>
               <div>
-                <h3 className="font-semibold mb-2">How much does the API key option really cost?</h3>
+                <h3 className="font-semibold mb-2">What happens after my 5 free questions?</h3>
                 <p className="text-gray-600 text-sm">
-                  Total cost is $5/month + your OpenAI usage (typically $5-15/month). Most users spend $10-20/month
-                  total, compared to $29/month for Pro.
+                  You'll need to upgrade to a paid plan to continue. The API plan is most cost-effective at
+                  ~$10-20/month total, while Pro offers convenience without API setup.
                 </p>
               </div>
               <div>
-                <h3 className="font-semibold mb-2">Is my data secure with my own API key?</h3>
+                <h3 className="font-semibold mb-2">Is my uploaded data secure?</h3>
                 <p className="text-gray-600 text-sm">
-                  Yes! Your conversations go directly to OpenAI. We never see your chat content, only facilitate the
-                  connection.
+                  Absolutely. All uploads are encrypted and processed securely. With the API plan, your data goes
+                  directly to OpenAI without us storing it.
                 </p>
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Can I switch between plans?</h3>
                 <p className="text-gray-600 text-sm">
-                  You can start with the API plan, or upgrade to Pro anytime for the convenience of not managing your
-                  own API key.
+                  Yes, you can upgrade or downgrade anytime. Your chat history and uploaded files are preserved when
+                  switching between paid plans.
                 </p>
               </div>
             </div>
