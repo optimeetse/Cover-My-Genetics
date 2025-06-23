@@ -1,12 +1,18 @@
+"use client"
+
+import { useActionState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Mail, Phone, MapPin, Clock } from "lucide-react"
+import { Mail, Phone, MapPin, Clock, CheckCircle, AlertCircle } from "lucide-react"
 import Navbar from "@/components/navbar"
+import { submitContactForm } from "@/app/actions/contact"
 
 export default function ContactUsPage() {
+  const [state, action, isPending] = useActionState(submitContactForm, null)
+
   return (
     <main className="min-h-screen flex flex-col">
       <Navbar />
@@ -29,35 +35,79 @@ export default function ContactUsPage() {
                   <CardTitle className="text-2xl text-emerald-800">Send us a message</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <form className="space-y-6">
+                  {state && (
+                    <div
+                      className={`mb-6 p-4 rounded-lg flex items-center gap-3 ${
+                        state.success
+                          ? "bg-green-50 text-green-800 border border-green-200"
+                          : "bg-red-50 text-red-800 border border-red-200"
+                      }`}
+                    >
+                      {state.success ? (
+                        <CheckCircle className="h-5 w-5 flex-shrink-0" />
+                      ) : (
+                        <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                      )}
+                      <p className="text-sm">{state.message}</p>
+                    </div>
+                  )}
+
+                  <form action={action} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="firstName">First Name</Label>
-                        <Input id="firstName" required className="border-emerald-200 focus:border-emerald-400" />
+                        <Input
+                          id="firstName"
+                          name="firstName"
+                          required
+                          className="border-emerald-200 focus:border-emerald-400"
+                          disabled={isPending}
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="lastName">Last Name</Label>
-                        <Input id="lastName" required className="border-emerald-200 focus:border-emerald-400" />
+                        <Input
+                          id="lastName"
+                          name="lastName"
+                          required
+                          className="border-emerald-200 focus:border-emerald-400"
+                          disabled={isPending}
+                        />
                       </div>
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" required className="border-emerald-200 focus:border-emerald-400" />
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        required
+                        className="border-emerald-200 focus:border-emerald-400"
+                        disabled={isPending}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="subject">Subject</Label>
-                      <Input id="subject" required className="border-emerald-200 focus:border-emerald-400" />
+                      <Input
+                        id="subject"
+                        name="subject"
+                        required
+                        className="border-emerald-200 focus:border-emerald-400"
+                        disabled={isPending}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="message">Message</Label>
                       <Textarea
                         id="message"
+                        name="message"
                         className="min-h-[150px] border-emerald-200 focus:border-emerald-400"
                         required
+                        disabled={isPending}
                       />
                     </div>
-                    <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700">
-                      Send Message
+                    <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={isPending}>
+                      {isPending ? "Sending..." : "Send Message"}
                     </Button>
                   </form>
                 </CardContent>
