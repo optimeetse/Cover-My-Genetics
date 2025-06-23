@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# High-value pages for crawling
+Allow: /ask-genie
+Allow: /pricing
+Allow: /blog
+Allow: /resources
+Allow: /counselors
+
+# Block admin/private areas
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://covermygenetics.com/sitemap.xml
