@@ -10,7 +10,7 @@ import Navbar from "@/components/navbar"
 import { loginUser } from "@/app/actions/auth"
 
 export default function LoginPage() {
-  const [state, action, isPending] = useActionState(loginUser, null)
+  const [state, action, isPending] = useActionState(loginUser, { success: false, message: "" })
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -22,7 +22,7 @@ export default function LoginPage() {
             <p className="text-gray-600 mt-2">Access your genetic insights</p>
           </div>
 
-          {state && (
+          {state && state.message && (
             <div
               className={`p-4 rounded-lg flex items-center gap-3 ${
                 state.success

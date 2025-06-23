@@ -11,7 +11,7 @@ import Navbar from "@/components/navbar"
 import { submitContactForm } from "@/app/actions/contact"
 
 export default function ContactUsPage() {
-  const [state, action, isPending] = useActionState(submitContactForm, null)
+  const [state, action, isPending] = useActionState(submitContactForm, { success: false, message: "" })
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -35,7 +35,7 @@ export default function ContactUsPage() {
                   <CardTitle className="text-2xl text-emerald-800">Send us a message</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {state && (
+                  {state && state.message && (
                     <div
                       className={`mb-6 p-4 rounded-lg flex items-center gap-3 ${
                         state.success

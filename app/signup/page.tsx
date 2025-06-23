@@ -11,7 +11,7 @@ import Navbar from "@/components/navbar"
 import { signupUser } from "@/app/actions/auth"
 
 export default function SignupPage() {
-  const [state, action, isPending] = useActionState(signupUser, null)
+  const [state, action, isPending] = useActionState(signupUser, { success: false, message: "" })
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -23,7 +23,7 @@ export default function SignupPage() {
             <p className="text-gray-600 mt-2">Start your genetic journey today</p>
           </div>
 
-          {state && (
+          {state && state.message && (
             <div
               className={`p-4 rounded-lg flex items-center gap-3 ${
                 state.success
